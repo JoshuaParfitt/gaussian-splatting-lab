@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#090e17" />
+    <meta name="description" content="An interactive exploration of Gaussian point-sprite rendering, custom GLSL shaders, and transparency." />
+    <title>Gaussian Splatting Lab — Interactive Shader Playground</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark">◈</span><div><strong>Gaussian Splatting Lab</strong><span class="subbrand">Interactive graphics research playground</span></div></div>
+        <div class="top-right"><span class="status-dot"></span><span>WEBGL RENDERER</span><a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub">GitHub ↗</a></div>
+      </header>
+      <div class="app-body">
+        <main class="stage">
+          <div class="stage-header"><div class="heading-line"><span class="eyebrow">RENDER VIEW</span><strong id="scene-heading">Twisted torus</strong></div><span class="hint">DRAG TO ROTATE · SCROLL TO ZOOM</span></div>
+          <div id="viewport" role="img" aria-label="Interactive Three.js 3D Gaussian point-sprite scene">
+            <div class="mode-label left-label" id="left-label">POINTS</div><div class="mode-label right-label" id="right-label">GAUSSIAN SPLATS</div><div id="midline"></div>
+            <div class="viewport-fallback" id="fallback" hidden>WebGL is unavailable. Try a browser with hardware acceleration enabled.</div>
+          </div>
+          <div class="stats-strip">
+            <div class="stat"><span>FRAME RATE</span><strong id="fps">—</strong><small>FPS</small></div>
+            <div class="stat"><span>GAUSSIANS</span><strong id="gaussians">—</strong></div>
+            <div class="stat"><span>FRAME TIME</span><strong id="frame-time">—</strong><small>ms</small></div>
+            <div class="stat"><span>DEPTH ORDER</span><strong id="depth-order">BACK → FRONT</strong></div>
+          </div>
+          <div class="explainer"><strong>What's happening?</strong><p id="explanation">Both views use the same 3D positions and colors. Left: hard-edged circular points. Right: transparent Gaussian falloff in a fragment shader, composited back-to-front.</p></div>
+        </main>
+        <aside class="sidebar">
+          <div class="side-head"><span class="eyebrow">EXPERIMENT CONTROLS</span><span class="chip">01 / RENDER</span></div>
+          <section class="control-group"><label for="mode">Rendering mode</label><div class="segmented" id="mode" role="group" aria-label="Rendering mode"><button class="active" data-mode="compare">Compare</button><button data-mode="splats">Splats</button><button data-mode="points">Points</button></div></section>
+          <section class="control-group"><label for="shape">Sample scene</label><select id="shape"><option value="torus">Twisted torus</option><option value="helix">Double helix</option><option value="sphere">Nebula sphere</option></select><span class="mini-help">Synthetic 3D Gaussian positions; no external assets.</span></section>
+          <section class="control-group"><div class="label-line"><label for="count">Primitive count</label><output id="count-value">3,000</output></div><input type="range" id="count" min="500" max="8000" step="500" value="3000" /></section>
+          <section class="control-group"><div class="label-line"><label for="size">Gaussian scale</label><output id="size-value">1.00×</output></div><input type="range" id="size" min="0.2" max="3" step="0.05" value="1" /></section>
+          <section class="control-group"><div class="label-line"><label for="opacity">Peak opacity</label><output id="opacity-value">0.65</output></div><input type="range" id="opacity" min="0.05" max="1" step="0.05" value="0.65" /></section>
+          <section class="control-group"><label for="palette">Color palette</label><select id="palette"><option value="aurora">Aurora · Cyan / Violet</option><option value="ember">Ember · Orange / Rose</option><option value="ocean">Deep ocean · Teal / Blue</option></select></section>
+          <button class="reset" id="reset">↻ &nbsp; Reset experiment</button>
+          <div class="math-card"><div class="eyebrow">THE CORE IDEA</div><div class="formula">G(r) = e<sup>−4.5r²</sup></div><p>Each point is rendered as a screen-facing sprite. The fragment shader maps distance from the sprite center to opacity using a Gaussian profile.</p><div class="graph" aria-hidden="true"><svg viewBox="0 0 248 80" preserveAspectRatio="none"><defs><linearGradient id="gauss-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#70e3da" stop-opacity=".32"/><stop offset="1" stop-color="#70e3da" stop-opacity="0"/></linearGradient></defs><line x1="8" y1="69" x2="240" y2="69" stroke="#47576a"/><path d="M8 69 C45 69 70 67 91 40 C104 20 113 7 124 7 C135 7 144 20 157 40 C178 67 203 69 240 69 L240 69 L8 69 Z" fill="url(#gauss-fill)"/><path d="M8 69 C45 69 70 67 91 40 C104 20 113 7 124 7 C135 7 144 20 157 40 C178 67 203 69 240 69" stroke="#7de8d8" stroke-width="2" fill="none"/></svg></div></div>
+          <p class="disclaimer"><strong>Scope:</strong> This is an educational <em>Gaussian point-sprite renderer</em>, not a full 3DGS reconstruction pipeline. It does not compute learned anisotropic covariance projections, spherical harmonics, or differentiable optimization.</p>
+        </aside>
+      </div>
+      <footer><span>THREE.JS · CUSTOM GLSL · PROCEDURAL DATA</span><span>Build to explore, not to benchmark production renderers.</span></footer>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
